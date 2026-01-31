@@ -334,7 +334,7 @@ function showNotification(message) {
 
 function openPreview() {
     // Abrir el multitask en nueva pestaña
-    window.open('/index.html', '_blank');
+    window.open('/index.php', '_blank');
 }
 
 function resetProgress() {
