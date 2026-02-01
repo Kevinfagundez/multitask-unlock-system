@@ -37,7 +37,7 @@ $pageTitle = $video['title'] . ' - Gomiatos';
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-    <link rel="stylesheet" href="/public/styles.css">
+    <link rel="stylesheet" href="public/styles.css">
     <script>
         // Pass video slug and data to JavaScript
         window.VIDEO_SLUG = <?php echo json_encode($videoSlug); ?>;
@@ -86,6 +86,6 @@ $pageTitle = $video['title'] . ' - Gomiatos';
         </button>
     </div>
 
-    <script src="/public/app.js"></script>
+    <script src="public/app.js"></script>
 </body>
 </html>

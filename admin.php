@@ -6,7 +6,7 @@
     <title>Panel de Administración - Gomiatos</title>
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-    <link rel="stylesheet" href="/admin/admin.css">
+    <link rel="stylesheet" href="admin/admin.css">
 </head>
 <body>
     
@@ -270,6 +270,6 @@
         </div>
     </div>
 
-    <script src="/admin/admin.js"></script>
+    <script src="admin/admin.js"></script>
 </body>
 </html>
