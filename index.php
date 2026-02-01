@@ -1,19 +1,64 @@
+<?php
+// Get video slug from URL parameter
+$videoSlug = $_GET['video'] ?? null;
+
+// If no video specified, redirect to admin
+if (!$videoSlug) {
+    header('Location: /admin.php');
+    exit;
+}
+
+// Read multitask_config.json directly
+$configFile = __DIR__ . '/multitask_config.json';
+if (!file_exists($configFile)) {
+    header('Location: /admin.php');
+    exit;
+}
+
+$configContent = file_get_contents($configFile);
+$configData = json_decode($configContent, true);
+
+if (!$configData || !isset($configData['videos'][$videoSlug])) {
+    // Video not found, redirect to admin
+    header('Location: /admin.php');
+    exit;
+}
+
+$video = $configData['videos'][$videoSlug];
+$video['id'] = $videoSlug; // Add slug to video data
+
+$pageTitle = $video['title'] . ' - Gomiatos';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multitask Zack</title>
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
     <link rel="stylesheet" href="/public/styles.css">
+    <script>
+        // Pass video slug and data to JavaScript
+        window.VIDEO_SLUG = <?php echo json_encode($videoSlug); ?>;
+        window.VIDEO_CONFIG = <?php echo json_encode($video); ?>;
+    </script>
 </head>
 <body>
     <div class="container">
-        <!-- Banner Image -->
+        <!-- Banner Image (Optional) -->
         <div class="banner-container" id="bannerContainer" style="display: none;">
             <img id="bannerImage" alt="Banner" class="banner-image">
         </div>
 
-        <h1 class="title">Multitask Zack</h1>
+        <h1 class="title"><?php echo htmlspecialchars($video['title']); ?></h1>
+        
+        <?php 
+        // Solo mostrar descripción si existe y no es el placeholder de error
+        if (!empty($video['description']) && $video['description'] !== 'descripción para corregir'): 
+        ?>
+            <p class="description"><?php echo htmlspecialchars($video['description']); ?></p>
+        <?php endif; ?>
 
         <div class="progress-section">
             <div class="progress-header">
@@ -22,7 +67,7 @@
                 </svg>
                 <span>PROGRESO DEL DESBLOQUEO</span>
             </div>
-            <div class="progress-text" id="progressText">0/2 tareas completadas</div>
+            <div class="progress-text" id="progressText">0/0 tareas completadas</div>
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progressBar" style="width: 0%"></div>
             </div>
@@ -42,6 +87,5 @@
     </div>
 
     <script src="/public/app.js"></script>
-    
 </body>
 </html>

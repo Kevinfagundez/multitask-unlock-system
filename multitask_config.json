@@ -10,5 +10,6 @@
             "duration": 10,
             "icon": "video"
         }
-    }
+    },
+    "videos": []
 }

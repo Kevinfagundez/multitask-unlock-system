@@ -1,0 +1,28 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Redirect root to admin
+RewriteRule ^$ admin.php [L]
+
+# Admin routes (don't rewrite)
+RewriteRule ^admin/?$ admin.php [L]
+RewriteRule ^admin\.php$ - [L]
+
+# Config API (don't rewrite)
+RewriteRule ^config\.php$ - [L]
+
+# Public assets (don't rewrite)
+RewriteRule ^public/ - [L]
+RewriteRule ^img/ - [L]
+RewriteRule ^admin/ - [L]
+
+# Video Unlock routes (everything else goes to index.php with video parameter)
+# Examples: /delta, /xenon, /bunni
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9-]+)$ index.php?video=$1 [L,QSA]
+
+# Fallback for other cases
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . admin.php [L]
