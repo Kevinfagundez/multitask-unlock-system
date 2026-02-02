@@ -12,11 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (CONFIG) {
         initUI();
     } else if (VIDEO_SLUG) {
-        // Fallback: load from API if not passed directly
         loadConfigFromAPI();
     } else {
         console.error("No video configuration found");
-        window.location.href = '/admin.php';
+        window.location.href = 'admin.php';
     }
 });
 
@@ -25,7 +24,7 @@ function loadConfigFromAPI() {
     const storageKey = `completedTasks_${VIDEO_SLUG}`;
     completedTasks = JSON.parse(localStorage.getItem(storageKey)) || {};
     
-    fetch(`/config.php?video=${encodeURIComponent(VIDEO_SLUG)}`)
+    fetch(`config.php?video=${encodeURIComponent(VIDEO_SLUG)}`)
         .then(res => res.json())
         .then(response => {
             if (response.success && response.data) {
@@ -33,16 +32,15 @@ function loadConfigFromAPI() {
                 initUI();
             } else {
                 console.error("Video no encontrado");
-                window.location.href = '/admin.php';
+                window.location.href = 'admin.php';
             }
         })
         .catch(err => {
             console.error("❌ Error cargando video:", err);
-            window.location.href = '/admin.php';
+            window.location.href = 'admin.php';
         });
 }
 
-// ===== ICONOS =====
 // ===== ICONOS =====
 const TASK_ICONS = {
     bell: {
@@ -54,7 +52,7 @@ const TASK_ICONS = {
         svg: '<path d="M21.593 7.203a2.506 2.506 0 00-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 00-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765 1.582.43 7.83.437 7.83.437s6.265.007 7.831-.403a2.515 2.515 0 001.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6 5.207 3.005-5.212 2.995z"></path>',
         gradient: 'linear-gradient(135deg, #ff0000 0%, #cc0000 100%)',
         fill: true,
-        color: 'white'  // Color específico para YouTube
+        color: 'white'
     },
     discord: {
         svg: '<path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"></path>',
@@ -137,13 +135,11 @@ function initUI() {
     console.log('Video:', CONFIG.title);
     console.log('Tareas disponibles:', Object.keys(CONFIG.tasks || {}).length);
 
-    // Reconstruir duraciones
     TASK_DURATIONS = {};
     Object.keys(CONFIG.tasks).forEach(taskId => {
         TASK_DURATIONS[taskId] = CONFIG.tasks[taskId].duration;
     });
 
-    // Load completed tasks
     const storageKey = `completedTasks_${VIDEO_SLUG}`;
     completedTasks = JSON.parse(localStorage.getItem(storageKey)) || {};
 
@@ -184,8 +180,9 @@ function renderTasks() {
         const task = CONFIG.tasks[taskId];
         const iconHTML = getTaskIconHTML(task.icon || 'bell');
 
+        // CAMBIO: Agregamos data-task-id y data-url al div principal
         tasksContainer.insertAdjacentHTML('beforeend', `
-            <div class="task-item" id="${taskId}">
+            <div class="task-item" id="${taskId}" data-task-id="${taskId}" data-url="${task.url}">
                 ${iconHTML}
                 <div class="task-content">
                     <div class="task-title">
@@ -193,7 +190,7 @@ function renderTasks() {
                     </div>
                     <div class="task-description">${task.description}</div>
                 </div>
-                <button class="task-action-btn" onclick="handleTaskClick('${taskId}', '${task.url}')">
+                <button class="task-action-btn">
                     <svg class="external-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -201,6 +198,15 @@ function renderTasks() {
                 </button>
             </div>
         `);
+    });
+
+    // CAMBIO: Agregamos event listeners a los task-item completos
+    document.querySelectorAll('.task-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const taskId = this.dataset.taskId;
+            const url = this.dataset.url;
+            handleTaskClick(taskId, url);
+        });
     });
 }
 

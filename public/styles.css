@@ -29,7 +29,18 @@ body {
     font-size: 24px;
     font-weight: 600;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 12px;
+}
+
+/* ===== DESCRIPTION STYLING ===== */
+.description {
+    color: #e9d5ff;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    font-weight: 400;
+    opacity: 0.95;
 }
 
 .progress-section {
@@ -76,6 +87,7 @@ body {
     transition: width 0.5s ease;
 }
 
+/* ===== TASK ITEM - CLICKABLE EVERYWHERE ===== */
 .task-item {
     background: rgba(30, 27, 75, 0.8);
     border: 1px solid rgba(168, 85, 247, 0.2);
@@ -98,13 +110,17 @@ body {
 .task-item.completed {
     opacity: 0.7;
     border-color: rgba(34, 197, 94, 0.5);
+    cursor: default;
+}
+
+.task-item.completed:hover {
+    transform: none;
 }
 
 .task-icon-wrapper {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -112,7 +128,7 @@ body {
 }
 
 .task-item.completed .task-icon-wrapper {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 }
 
 .task-icon {
@@ -140,6 +156,7 @@ body {
     font-size: 14px;
 }
 
+/* ===== TASK ACTION BUTTON - VISIBLE BUT NOT REQUIRED ===== */
 .task-action-btn {
     width: 44px;
     height: 44px;
@@ -152,9 +169,10 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     flex-shrink: 0;
+    pointer-events: none; /* No interfiere con el click del task-item */
 }
 
-.task-action-btn:hover {
+.task-item:hover .task-action-btn {
     transform: scale(1.1);
     box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
@@ -214,6 +232,7 @@ body {
     color: #c084fc;
     font-weight: 600;
 }
+
 /* ===== BANNER IMAGE ===== */
 .banner-container {
     width: calc(100% + 60px);
@@ -255,24 +274,6 @@ body {
     box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
 }
 
-/* Iconos de tareas */
-.task-icon-wrapper {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 16px;
-    flex-shrink: 0;
-}
-
-.task-icon {
-    width: 24px;
-    height: 24px;
-    color: white;
-}
-
 /* Para iconos que usan stroke (líneas) */
 .task-icon[stroke] {
     stroke: white;
@@ -281,12 +282,4 @@ body {
 /* Para iconos que usan fill (relleno) */
 .task-icon[fill] {
     fill: white;
-}
-
-.description {
-    color: #d8b4fe;
-    font-size: 14px;
-    text-align: center;
-    margin-bottom: 24px;
-    line-height: 1.5;
 }
